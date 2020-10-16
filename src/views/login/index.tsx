@@ -3,12 +3,12 @@ import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
 import { Button, LinearProgress } from '@material-ui/core';
 
-import { auth } from '../../services/firebase';
+import userService from '../../services/user';
 import { loginSchema } from '../../schema/login';
 
 function Login() {
   function login(email: string, password: string) {
-    return auth.signInWithEmailAndPassword(email, password);
+    return userService.login(email, password);
   }
 
   return (

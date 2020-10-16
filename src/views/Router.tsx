@@ -4,6 +4,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { BrowserRouter, Route, Redirect, Switch, RouteProps } from 'react-router-dom';
 
 import Login from './login';
+import userService from '../services/user';
 import { auth } from '../services/firebase';
 import { ROUTES } from '../constants/routes';
 
@@ -53,7 +54,7 @@ function PrivateRoute({ children, ...rest }: RouteProps) {
 
 function Router() {
   function logout() {
-    return auth.signOut();
+    return userService.logout();
   }
 
   return <BrowserRouter>
