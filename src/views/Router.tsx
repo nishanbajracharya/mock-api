@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Redirect, Switch, RouteProps } from 'react-router
 
 import Login from './login';
 import { auth } from '../services/firebase';
+import { ROUTES } from '../constants/routes';
 
 function AuthRoute({ children, ...rest }: RouteProps) {
   const [user] = useAuthState(auth);
@@ -18,7 +19,7 @@ function AuthRoute({ children, ...rest }: RouteProps) {
         ) : (
             <Redirect
               to={{
-                pathname: '/',
+                pathname: ROUTES.HOME,
                 state: { from: location }
               }}
             />
@@ -40,7 +41,7 @@ function PrivateRoute({ children, ...rest }: RouteProps) {
         ) : (
             <Redirect
               to={{
-                pathname: '/login',
+                pathname: ROUTES.LOGIN,
                 state: { from: location }
               }}
             />
@@ -57,8 +58,8 @@ function Router() {
 
   return <BrowserRouter>
     <Switch>
-      <AuthRoute path="/login"><Login /></AuthRoute>
-      <PrivateRoute path="/">
+      <AuthRoute path={ROUTES.LOGIN}><Login /></AuthRoute>
+      <PrivateRoute path={ROUTES.HOME}>
         <Button variant="contained" color="primary" onClick={logout}>Log out</Button>
       </PrivateRoute>
     </Switch>
