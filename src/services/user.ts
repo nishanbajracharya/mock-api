@@ -1,4 +1,4 @@
-import { auth } from './firebase';
+import { auth, firebase } from './firebase';
 
 export function login(email: string, password: string) {
   return auth.signInWithEmailAndPassword(email, password);
@@ -12,3 +12,12 @@ export default {
   login,
   logout,
 };
+
+export function loginWithGoogle() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.addScope('profile');
+  provider.addScope('email');
+
+  return auth.signInWithPopup(provider)
+    .then(response => console.log(response));
+}

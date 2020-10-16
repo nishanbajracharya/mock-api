@@ -2,7 +2,7 @@ import React from 'react';
 import blue from '@material-ui/core/colors/blue';
 import grey from '@material-ui/core/colors/grey';
 import orange from '@material-ui/core/colors/deepOrange';
-import { createMuiTheme , ThemeProvider} from '@material-ui/core/styles';
+import { unstable_createMuiStrictModeTheme as createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import App from './App';
 

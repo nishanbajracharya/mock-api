@@ -5,14 +5,18 @@ import Button from '@material-ui/core/Button';
 import { TextField } from 'formik-material-ui';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import userService from '../../services/user';
 import { loginSchema } from '../../schema/login';
 import { getErrorMessage, ErrorProp } from '../../utils/errorHandler';
 
-import {ReactComponent as Logo} from '../../assets/images/logo.svg';
+import { ReactComponent as Logo } from '../../assets/images/logo.svg';
 
 const useStyles = makeStyles((theme) => ({
   base: {
@@ -51,11 +55,32 @@ const useStyles = makeStyles((theme) => ({
   alert: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-  }
+  },
+  divider: {
+    width: '100%',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(3),
+  },
+  googleButton: {
+    marginBottom: theme.spacing(2),
+    background: theme.palette.common.white,
+  },
+  googleLogo: {
+    marginRight: theme.spacing(1),
+  },
 }));
 
 function Login() {
   const [error, setError] = useState<ErrorProp>({});
+  const [visibility, setVisibility] = useState(false);
+
+  const handleClickShowPassword = () => {
+    setVisibility(!visibility);
+  };
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
 
   const classes = useStyles();
 
@@ -74,7 +99,7 @@ function Login() {
     <div className={classes.base}>
       <Container component="main" maxWidth="xs">
         <div className={classes.paper}>
-          <Logo width={48} className={classes.logo}/>
+          <Logo width={48} className={classes.logo} />
           <Typography component="h1" variant="h5" className={classes.headerText}>
             Mock API Admin
             </Typography>
@@ -92,6 +117,7 @@ function Login() {
           >
             {({ submitForm, isSubmitting }) => (
               <Form className={classes.form}>
+                <Typography variant="body1" color="textSecondary" align="center">Sign in with email</Typography>
                 <Field
                   component={TextField}
                   name="email"
@@ -103,12 +129,25 @@ function Login() {
                 />
                 <Field
                   component={TextField}
-                  type="password"
+                  type={visibility ? 'text' : 'password'}
                   label="Password"
                   name="password"
                   variant="outlined"
                   fullWidth
                   margin="normal"
+                  InputProps={{
+                    endAdornment:
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {visibility ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                  }}
+
                 />
                 <Button
                   fullWidth
