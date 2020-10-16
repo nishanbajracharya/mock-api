@@ -1,10 +1,9 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { BrowserRouter, Route, Redirect, Switch, RouteProps } from 'react-router-dom';
 
+import Home from './home';
 import Login from './login';
-import userService from '../services/user';
 import { auth } from '../services/firebase';
 import { ROUTES } from '../constants/routes';
 
@@ -53,15 +52,12 @@ function PrivateRoute({ children, ...rest }: RouteProps) {
 }
 
 function Router() {
-  function logout() {
-    return userService.logout();
-  }
 
   return <BrowserRouter>
     <Switch>
       <AuthRoute path={ROUTES.LOGIN}><Login /></AuthRoute>
       <PrivateRoute path={ROUTES.HOME}>
-        <Button variant="contained" color="primary" onClick={logout}>Log out</Button>
+        <Home />
       </PrivateRoute>
     </Switch>
   </BrowserRouter>
