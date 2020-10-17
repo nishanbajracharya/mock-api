@@ -14,6 +14,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import userService from '../../services/user';
 import { loginSchema } from '../../schema/login';
+import FadeSlide from '../../components/FadeSlide';
 import { getErrorMessage, ErrorProp } from '../../utils/errorHandler';
 
 import { ReactComponent as Logo } from '../../assets/images/logo.svg';
@@ -92,80 +93,82 @@ function Login() {
   }
 
   function clearError() {
-    if (error.code) setError({});
+    setError({});
   }
 
   return (
-    <div className={classes.base}>
-      <Container component="main" maxWidth="xs">
-        <div className={classes.paper}>
-          <Logo width={48} className={classes.logo} />
-          <Typography component="h1" variant="h5" className={classes.headerText}>
-            Mock API Admin
+    <FadeSlide>
+      <div className={classes.base}>
+        <Container component="main" maxWidth="xs">
+          <div className={classes.paper}>
+            <Logo width={48} className={classes.logo} />
+            <Typography component="h1" variant="h5" className={classes.headerText}>
+              Mock API Admin
             </Typography>
-          <Formik
-            initialValues={{
-              email: '',
-              password: '',
-            }}
-            validationSchema={loginSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              setError({});
-              login(values.email, values.password)
-                .finally(() => setSubmitting(false));
-            }}
-          >
-            {({ submitForm, isSubmitting }) => (
-              <Form className={classes.form}>
-                <Typography variant="body1" color="textSecondary" align="center">Sign in with email</Typography>
-                <Field
-                  component={TextField}
-                  name="email"
-                  type="email"
-                  label="Email"
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                />
-                <Field
-                  component={TextField}
-                  type={visibility ? 'text' : 'password'}
-                  label="Password"
-                  name="password"
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  InputProps={{
-                    endAdornment:
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                        >
-                          {visibility ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                  }}
+            <Formik
+              initialValues={{
+                email: '',
+                password: '',
+              }}
+              validationSchema={loginSchema}
+              onSubmit={(values, { setSubmitting }) => {
+                setError({});
+                login(values.email, values.password)
+                  .finally(() => setSubmitting(false));
+              }}
+            >
+              {({ submitForm, isSubmitting }) => (
+                <Form className={classes.form}>
+                  <Typography variant="body1" color="textSecondary" align="center">Sign in with email</Typography>
+                  <Field
+                    component={TextField}
+                    name="email"
+                    type="email"
+                    label="Email"
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                  />
+                  <Field
+                    component={TextField}
+                    type={visibility ? 'text' : 'password'}
+                    label="Password"
+                    name="password"
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      endAdornment:
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                          >
+                            {visibility ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                    }}
 
-                />
-                <Button
-                  fullWidth
-                  className={classes.submit}
-                  variant="contained"
-                  color="primary"
-                  disabled={isSubmitting}
-                  onClick={submitForm}
-                >
-                  Sign In {isSubmitting && <CircularProgress size={20} className={classes.progress} />}
-                </Button>
-                {error.code && <Alert severity="error" className={classes.alert} onClose={clearError}>{getErrorMessage(error)}</Alert>}
-              </Form>
-            )}
-          </Formik>
-        </div>
-      </Container>
-    </div>
+                  />
+                  <Button
+                    fullWidth
+                    className={classes.submit}
+                    variant="contained"
+                    color="primary"
+                    disabled={isSubmitting}
+                    onClick={submitForm}
+                  >
+                    Sign In {isSubmitting && <CircularProgress size={20} className={classes.progress} />}
+                  </Button>
+                  {error.code && <Alert severity="error" className={classes.alert} onClose={clearError}>{getErrorMessage(error)}</Alert>}
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </Container>
+      </div>
+    </FadeSlide>
   );
 }
 
