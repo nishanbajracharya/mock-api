@@ -14,7 +14,6 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import Modal from '../../components/Modal';
 import userService from '../../services/user';
 import { auth } from '../../services/firebase';
-import FadeSlide from '../../components/FadeSlide';
 
 import { ReactComponent as Logo } from '../../assets/images/logo.svg';
 import { ReactComponent as GoogleLogo } from '../../assets/images/google.svg';
@@ -148,34 +147,32 @@ function AppBarComponent() {
         className={classes.modal}
         onRequestClose={() => setOpenModal(false)}
       >
-        <FadeSlide in={openModal}>
-          <div className={classes.paper}>
-            <div className={classes.modalHeaderText}>Link with Google Account</div>
-            {
-              user?.providerData.find(provider => provider?.providerId === 'google.com') ?
-                <div>
-                  <Alert severity="success" className={classes.accountLinked}>Google Account Linked</Alert>
-                  <Button
-                    fullWidth
-                    color="primary"
-                    variant="contained"
-                    className={classes.topMargin}
-                    onClick={unlink}
-                  >
-                    Unlink Account
-                  </Button>
-                </div> :
+        <div className={classes.paper}>
+          <div className={classes.modalHeaderText}>Link with Google Account</div>
+          {
+            user?.providerData.find(provider => provider?.providerId === 'google.com') ?
+              <div>
+                <Alert severity="success" className={classes.accountLinked}>Google Account Linked</Alert>
                 <Button
                   fullWidth
+                  color="primary"
                   variant="contained"
-                  onClick={linkGoogleAccount}
-                  className={classes.googleButton}
+                  className={classes.topMargin}
+                  onClick={unlink}
                 >
-                  <GoogleLogo className={classes.googleLogo} width={18} /> Link Google Account
+                  Unlink Account
+                  </Button>
+              </div> :
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={linkGoogleAccount}
+                className={classes.googleButton}
+              >
+                <GoogleLogo className={classes.googleLogo} width={18} /> Link Google Account
                 </Button>
-            }
-          </div>
-        </FadeSlide>
+          }
+        </div>
       </Modal>
     </div>
   );

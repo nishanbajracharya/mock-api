@@ -12,7 +12,6 @@ import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 import Modal from '../../components/Modal';
 import CollectionForm from './CollectionForm';
-import FadeSlide from '../../components/FadeSlide';
 import { addNewCollection, getCollectionList } from '../../services/collection';
 
 type CollectionItemProp = {
@@ -102,12 +101,10 @@ function Collections() {
       className={classes.modal}
       onRequestClose={handleClose}
     >
-      <FadeSlide in={open}>
-        <div className={classes.paper}>
-          <div className={classes.modalHeaderText}>Enter collection details</div>
-          <CollectionForm create={addCollection} handleClose={handleClose} />
-        </div>
-      </FadeSlide>
+      <div className={classes.paper}>
+        <div className={classes.modalHeaderText}>Enter collection details</div>
+        <CollectionForm create={addCollection} handleClose={handleClose} />
+      </div>
     </Modal>
   </div>;
 }
