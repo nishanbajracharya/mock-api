@@ -3,6 +3,7 @@ import Alert from '@material-ui/lab/Alert';
 import { Formik, Form, Field } from 'formik';
 import Button from '@material-ui/core/Button';
 import { TextField } from 'formik-material-ui';
+import Divider from '@material-ui/core/Divider';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,6 +19,7 @@ import FadeSlide from '../../components/FadeSlide';
 import { getErrorMessage, ErrorProp } from '../../utils/errorHandler';
 
 import { ReactComponent as Logo } from '../../assets/images/logo.svg';
+import { ReactComponent as GoogleLogo } from '../../assets/images/google.svg';
 
 const useStyles = makeStyles((theme) => ({
   base: {
@@ -87,6 +89,13 @@ function Login() {
 
   function login(email: string, password: string) {
     return userService.login(email, password)
+      .catch(error => {
+        setError(error);
+      });
+  }
+
+  function loginWithGoogle() {
+    return userService.loginWithGoogle()
       .catch(error => {
         setError(error);
       });
@@ -165,6 +174,15 @@ function Login() {
                 </Form>
               )}
             </Formik>
+            <Divider className={classes.divider} />
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={loginWithGoogle}
+              className={classes.googleButton}
+            >
+              <GoogleLogo className={classes.googleLogo} width={18} /> Log in with Google
+            </Button>
           </div>
         </Container>
       </div>

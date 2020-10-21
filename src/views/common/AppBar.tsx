@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import Menu from '@material-ui/core/Menu';
+import Alert from '@material-ui/lab/Alert';
+import Modal from '@material-ui/core/Modal';
+import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Backdrop from '@material-ui/core/Backdrop';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,7 +15,10 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 
 import userService from '../../services/user';
 import { auth } from '../../services/firebase';
+import FadeSlide from '../../components/FadeSlide';
+
 import { ReactComponent as Logo } from '../../assets/images/logo.svg';
+import { ReactComponent as GoogleLogo } from '../../assets/images/google.svg';
 
 const useStyles = makeStyles(theme => ({
   logo: {
@@ -24,27 +31,76 @@ const useStyles = makeStyles(theme => ({
   avatar: {
     border: '2px solid #fff'
   },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    outline: 'none',
+    border: 'none',
+    borderRadius: 4,
+    boxSizing: 'border-box',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    maxWidth: theme.breakpoints.width('sm'),
+    backgroundColor: theme.palette.background.paper,
+  },
+  modalHeaderText: {
+    fontWeight: 500,
+    marginTop: theme.spacing(2),
+  },
+  googleButton: {
+    marginTop: theme.spacing(2),
+    background: theme.palette.common.white,
+  },
+  googleLogo: {
+    marginRight: theme.spacing(1),
+  },
+  accountLinked: {
+    marginTop: theme.spacing(2),
+  },
+  topMargin: {
+    marginTop: theme.spacing(2),
+  },
 }));
 
 function AppBarComponent() {
   function logout() {
-    handleClose();
+    handleCloseModal();
+    setOpenModal(false);
 
     return userService.logout();
   }
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  function linkGoogleAccount() {
+    return userService.linkGoogleAccount()?.then(() => setOpenModal(false));
+  }
+  
+  function unlink() {
+    return user?.unlink('google.com').then(() => setOpenModal(false));
+  }
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  function openLinkAccount() {
+    handleCloseModal();
+    setOpenModal(true);
+  }
+
+  function handleMenu (event: React.MouseEvent<HTMLElement>) {
     setAnchorEl(event.currentTarget);
-  };
+  }
 
-  const handleClose = () => {
+
+  function handleCloseModal() {
     setAnchorEl(null);
-  };
-
+  }
+  
   const classes = useStyles();
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+
+  const [openModal, setOpenModal] = useState(false);
 
   const [user] = useAuthState(auth);
 
@@ -64,7 +120,7 @@ function AppBarComponent() {
               onClick={handleMenu}
               color="inherit"
             >
-              <Avatar alt={user?.displayName || 'Admin'} src={user?.photoURL || undefined} className={classes.avatar} />
+              <Avatar alt={user?.displayName || 'User'} src={user?.photoURL || undefined} className={classes.avatar} />
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -78,15 +134,57 @@ function AppBarComponent() {
                 vertical: 'top',
                 horizontal: 'right',
               }}
-              open={open}
-              onClose={handleClose}
+              open={openMenu}
+              onClose={handleCloseModal}
             >
-              <MenuItem disabled>{user?.displayName || 'Admin'}</MenuItem>
+              <MenuItem disabled>{user?.displayName || 'User'}</MenuItem>
+              <MenuItem onClick={openLinkAccount}>Link Account</MenuItem>
               <MenuItem onClick={logout}>Logout</MenuItem>
             </Menu>
           </div>
         </Toolbar>
       </AppBar>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <FadeSlide in={openModal}>
+          <div className={classes.paper}>
+            <div className={classes.modalHeaderText}>Link with Google Account</div>
+            {
+              user?.providerData.find(provider => provider?.providerId === 'google.com') ?
+                <div>
+                  <Alert severity="success" className={classes.accountLinked}>Google Account Linked</Alert>
+                  <Button
+                    fullWidth
+                    color="primary"
+                    variant="contained"
+                    className={classes.topMargin}
+                    onClick={unlink}
+                  >
+                    Unlink Account
+                  </Button>
+                </div> :
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={linkGoogleAccount}
+                  className={classes.googleButton}
+                >
+                  <GoogleLogo className={classes.googleLogo} width={18} /> Link Google Account
+                </Button>
+            }
+          </div>
+        </FadeSlide>
+      </Modal>
     </div>
   );
 }

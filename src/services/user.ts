@@ -8,11 +8,6 @@ export function logout() {
   return auth.signOut();
 }
 
-export default {
-  login,
-  logout,
-};
-
 export function loginWithGoogle() {
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.addScope('profile');
@@ -21,3 +16,16 @@ export function loginWithGoogle() {
   return auth.signInWithPopup(provider)
     .then(response => console.log(response));
 }
+
+export function linkGoogleAccount() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+
+  return auth.currentUser?.linkWithPopup(provider);
+}
+
+export default {
+  login,
+  logout,
+  loginWithGoogle,
+  linkGoogleAccount,
+};

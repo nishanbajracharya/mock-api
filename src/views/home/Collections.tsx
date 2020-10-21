@@ -13,8 +13,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 import CollectionForm from './CollectionForm';
-import { addNewCollection, getCollectionList } from '../../services/collection';
 import FadeSlide from '../../components/FadeSlide';
+import { addNewCollection, getCollectionList } from '../../services/collection';
 
 type CollectionItemProp = {
   title: string;
