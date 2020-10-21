@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Fade from '@material-ui/core/Fade';
 import Alert from '@material-ui/lab/Alert';
 import { Formik, Form, Field } from 'formik';
 import Button from '@material-ui/core/Button';
@@ -15,7 +16,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import userService from '../../services/user';
 import { loginSchema } from '../../schema/login';
-import FadeSlide from '../../components/FadeSlide';
 import { getErrorMessage, ErrorProp } from '../../utils/errorHandler';
 
 import { ReactComponent as Logo } from '../../assets/images/logo.svg';
@@ -106,7 +106,7 @@ function Login() {
   }
 
   return (
-    <FadeSlide>
+    <Fade in>
       <div className={classes.base}>
         <Container component="main" maxWidth="xs">
           <div className={classes.paper}>
@@ -186,7 +186,7 @@ function Login() {
           </div>
         </Container>
       </div>
-    </FadeSlide>
+    </Fade>
   );
 }
 

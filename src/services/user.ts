@@ -13,8 +13,7 @@ export function loginWithGoogle() {
   provider.addScope('profile');
   provider.addScope('email');
 
-  return auth.signInWithPopup(provider)
-    .then(response => console.log(response));
+  return auth.signInWithPopup(provider);
 }
 
 export function linkGoogleAccount() {

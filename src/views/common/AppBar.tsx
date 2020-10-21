@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import Menu from '@material-ui/core/Menu';
 import Alert from '@material-ui/lab/Alert';
-import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Backdrop from '@material-ui/core/Backdrop';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
+import Modal from '../../components/Modal';
 import userService from '../../services/user';
 import { auth } from '../../services/firebase';
 import FadeSlide from '../../components/FadeSlide';
@@ -76,7 +75,7 @@ function AppBarComponent() {
   function linkGoogleAccount() {
     return userService.linkGoogleAccount()?.then(() => setOpenModal(false));
   }
-  
+
   function unlink() {
     return user?.unlink('google.com').then(() => setOpenModal(false));
   }
@@ -86,7 +85,7 @@ function AppBarComponent() {
     setOpenModal(true);
   }
 
-  function handleMenu (event: React.MouseEvent<HTMLElement>) {
+  function handleMenu(event: React.MouseEvent<HTMLElement>) {
     setAnchorEl(event.currentTarget);
   }
 
@@ -94,7 +93,7 @@ function AppBarComponent() {
   function handleCloseModal() {
     setAnchorEl(null);
   }
-  
+
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -145,16 +144,9 @@ function AppBarComponent() {
         </Toolbar>
       </AppBar>
       <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
+        isOpen={openModal}
         className={classes.modal}
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
+        onRequestClose={() => setOpenModal(false)}
       >
         <FadeSlide in={openModal}>
           <div className={classes.paper}>
