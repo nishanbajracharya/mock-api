@@ -1,4 +1,7 @@
+import { User } from 'firebase';
+
 import { auth, firebase } from './firebase';
+import { GUEST_USER } from '../constants/user';
 
 export function login(email: string, password: string) {
   return auth.signInWithEmailAndPassword(email, password);
@@ -22,9 +25,19 @@ export function linkGoogleAccount() {
   return auth.currentUser?.linkWithPopup(provider);
 }
 
+export function loginAsGuest() {
+  return login(GUEST_USER.EMAIL, GUEST_USER.PASSWORD);
+}
+
+export function isGuest(user: User | undefined) {
+  return user?.email === GUEST_USER.EMAIL;
+}
+
 export default {
   login,
   logout,
+  isGuest,
+  loginAsGuest,
   loginWithGoogle,
   linkGoogleAccount,
 };

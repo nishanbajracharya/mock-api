@@ -102,6 +102,8 @@ function AppBarComponent() {
 
   const [user] = useAuthState(auth);
 
+  const guestUser = userService.isGuest(user);
+
   return (
     <div>
       <AppBar position="static">
@@ -135,8 +137,8 @@ function AppBarComponent() {
               open={openMenu}
               onClose={handleCloseModal}
             >
-              <MenuItem disabled>{user?.displayName || 'User'}</MenuItem>
-              <MenuItem onClick={openLinkAccount}>Link Account</MenuItem>
+              <MenuItem disabled>{guestUser ? 'Guest' : user?.displayName || 'User'}</MenuItem>
+              {!guestUser && <MenuItem onClick={openLinkAccount}>Link Account</MenuItem>}
               <MenuItem onClick={logout}>Logout</MenuItem>
             </Menu>
           </div>

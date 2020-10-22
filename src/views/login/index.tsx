@@ -5,6 +5,7 @@ import { Formik, Form, Field } from 'formik';
 import Button from '@material-ui/core/Button';
 import { TextField } from 'formik-material-ui';
 import Divider from '@material-ui/core/Divider';
+import PersonIcon from '@material-ui/icons/Person';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -64,11 +65,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(3),
   },
-  googleButton: {
+  loginButton: {
     marginBottom: theme.spacing(2),
     background: theme.palette.common.white,
   },
-  googleLogo: {
+  loginButtonLogo: {
     marginRight: theme.spacing(1),
   },
 }));
@@ -103,6 +104,13 @@ function Login() {
 
   function clearError() {
     setError({});
+  }
+
+  function loginAsGuest() {
+    return userService.loginAsGuest()
+      .catch(error => {
+        setError(error);
+      });
   }
 
   return (
@@ -179,9 +187,17 @@ function Login() {
               fullWidth
               variant="contained"
               onClick={loginWithGoogle}
-              className={classes.googleButton}
+              className={classes.loginButton}
             >
-              <GoogleLogo className={classes.googleLogo} width={18} /> Log in with Google
+              <GoogleLogo className={classes.loginButtonLogo} width={18} /> Log in with Google
+            </Button>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={loginAsGuest}
+              className={classes.loginButton}
+            >
+              <PersonIcon className={classes.loginButtonLogo} /> Log in as Guest
             </Button>
           </div>
         </Container>
