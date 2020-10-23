@@ -1,20 +1,18 @@
 import React from 'react';
 import Add from '@material-ui/icons/Add';
 import List from '@material-ui/core/List';
-import Modal from '@material-ui/core/Modal';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ListItem from '@material-ui/core/ListItem';
-import Backdrop from '@material-ui/core/Backdrop';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
+import Modal from '../../components/Modal';
 import CollectionForm from './CollectionForm';
 import { addNewCollection, getCollectionList } from '../../services/collection';
-import FadeSlide from '../../components/FadeSlide';
 
 type CollectionItemProp = {
   title: string;
@@ -99,23 +97,14 @@ function Collections() {
     </List>
 
     <Modal
-      aria-labelledby="transition-modal-title"
-      aria-describedby="transition-modal-description"
+      isOpen={open}
       className={classes.modal}
-      open={open}
-      onClose={handleClose}
-      closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
+      onRequestClose={handleClose}
     >
-      <FadeSlide in={open}>
-        <div className={classes.paper}>
-          <div className={classes.modalHeaderText}>Enter collection details</div>
-          <CollectionForm create={addCollection} handleClose={handleClose}/>
-        </div>
-      </FadeSlide>
+      <div className={classes.paper}>
+        <div className={classes.modalHeaderText}>Enter collection details</div>
+        <CollectionForm create={addCollection} handleClose={handleClose} />
+      </div>
     </Modal>
   </div>;
 }

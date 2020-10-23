@@ -29,7 +29,7 @@ function Home() {
   const classes = useStyles();
 
   return (
-    <Fade in={true}>
+    <Fade in>
       <div>
         <AppBar />
         <Container className={classes.container}>

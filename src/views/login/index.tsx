@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import Fade from '@material-ui/core/Fade';
 import Alert from '@material-ui/lab/Alert';
 import { Formik, Form, Field } from 'formik';
 import Button from '@material-ui/core/Button';
 import { TextField } from 'formik-material-ui';
+import Divider from '@material-ui/core/Divider';
+import PersonIcon from '@material-ui/icons/Person';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,10 +17,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import userService from '../../services/user';
 import { loginSchema } from '../../schema/login';
-import FadeSlide from '../../components/FadeSlide';
 import { getErrorMessage, ErrorProp } from '../../utils/errorHandler';
 
 import { ReactComponent as Logo } from '../../assets/images/logo.svg';
+import { ReactComponent as GoogleLogo } from '../../assets/images/google.svg';
 
 const useStyles = makeStyles((theme) => ({
   base: {
@@ -62,11 +65,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(3),
   },
-  googleButton: {
+  loginButton: {
     marginBottom: theme.spacing(2),
     background: theme.palette.common.white,
   },
-  googleLogo: {
+  loginButtonLogo: {
     marginRight: theme.spacing(1),
   },
 }));
@@ -92,12 +95,26 @@ function Login() {
       });
   }
 
+  function loginWithGoogle() {
+    return userService.loginWithGoogle()
+      .catch(error => {
+        setError(error);
+      });
+  }
+
   function clearError() {
     setError({});
   }
 
+  function loginAsGuest() {
+    return userService.loginAsGuest()
+      .catch(error => {
+        setError(error);
+      });
+  }
+
   return (
-    <FadeSlide>
+    <Fade in>
       <div className={classes.base}>
         <Container component="main" maxWidth="xs">
           <div className={classes.paper}>
@@ -165,10 +182,27 @@ function Login() {
                 </Form>
               )}
             </Formik>
+            <Divider className={classes.divider} />
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={loginWithGoogle}
+              className={classes.loginButton}
+            >
+              <GoogleLogo className={classes.loginButtonLogo} width={18} /> Log in with Google
+            </Button>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={loginAsGuest}
+              className={classes.loginButton}
+            >
+              <PersonIcon className={classes.loginButtonLogo} /> Log in as Guest
+            </Button>
           </div>
         </Container>
       </div>
-    </FadeSlide>
+    </Fade>
   );
 }
 

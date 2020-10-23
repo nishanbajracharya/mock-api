@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Transition } from 'react-transition-group';
 
 const height = 20;
@@ -31,13 +31,7 @@ type FadeSlideProps = {
 };
 
 function FadeSlide(props: FadeSlideProps): React.ReactElement {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => setShow(true), props.duration || duration);
-  }, [props.in, props.duration]);
-
-  return <Transition in={(props.in || true) && show} timeout={props.duration || duration}>
+  return <Transition appear in={props.in} timeout={props.duration || duration}>
     {state => (
       <div style={{
         ...defaultStyle,
