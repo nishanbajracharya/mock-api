@@ -29,11 +29,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type CollectionFormProps = {
-  create: (collection: {title: string, route: string}) => Promise<void> | undefined;
-  handleClose: () => void;
-};
-
 function CollectionForm(props: CollectionFormProps) {
   const classes = useStyles();
 
