@@ -33,7 +33,7 @@ export function isGuest(user: User | undefined) {
   return user?.email === GUEST_USER.EMAIL;
 }
 
-export default {
+const userService = {
   login,
   logout,
   isGuest,
@@ -41,3 +41,5 @@ export default {
   loginWithGoogle,
   linkGoogleAccount,
 };
+
+export default userService;

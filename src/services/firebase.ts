@@ -9,9 +9,11 @@ export const auth = app.auth();
 export const firestore = app.firestore();
 export const firebase = firebaseApp;
 
-export default {
+const firebaseService = {
   app,
   auth,
   firestore,
   firebase: firebaseApp,
 };
+
+export default firebaseService;
