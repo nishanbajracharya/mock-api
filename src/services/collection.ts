@@ -84,13 +84,13 @@ export async function deleteCollection(
     return Promise.reject();
   }
 
-  await deleteCollectionWithData(collection.collectionName, 10);
-
-  return getCollectionList().set(
-    {
-      list: collectionList?.filter((item) => item !== collection) || [],
-    },
-    { merge: true }
+  return deleteCollectionWithData(collection.collectionName, 10).then(() =>
+    getCollectionList().set(
+      {
+        list: collectionList?.filter((item) => item !== collection) || [],
+      },
+      { merge: true }
+    )
   );
 }
 
