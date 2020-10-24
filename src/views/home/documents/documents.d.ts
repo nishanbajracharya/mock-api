@@ -27,6 +27,7 @@ type DocumentDataProp = {
 
 type DocumentData = {
   id: string;
+  displayLabel?: string;
   fields?: DocumentFieldProp[];
 };
 

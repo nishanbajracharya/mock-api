@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 function DocumentItem(props: DocumentDataProp) {
   return <ListItem button selected={props.selected} onClick={props.onClick}>
-    <ListItemText primary={props.id} />
+    <ListItemText primary={props.document.displayLabel || props.id} />
   </ListItem>
 }
 
@@ -62,7 +62,7 @@ function DocumentSidebar(props: DocumentSidebarComponentProps) {
       </ListItem>
     }
     {
-      props.documents && props.documents.map((doc: DocumentItemProp, key: number) => {
+      props.documents && props.documents.map((doc: DocumentItemProp) => {
         const data = doc.data();
 
         return <DocumentItem id={data.id} key={data.id} document={data} selected={props.selectedItem === data.id} onClick={() => props.setSelectedItem(props.selectedItem === data.id ? null : data.id)} />
