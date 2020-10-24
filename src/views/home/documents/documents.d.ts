@@ -2,26 +2,38 @@ type DocumentComponentProps = {
   collection: CollectionItemProp | null | undefined;
 };
 
-type DocumentItemProp = DocumentDataHook & {
-  
-};
+type DocumentItemProp = DocumentDataHook & {};
 
 type DocumentSidebarComponentProps = {
   loading?: boolean;
-  selectedItem: number | null;
+  selectedItem: string | null;
   documents: DocumentDataHook | undefined;
-  setSelectedItem: (item: number | null) => any;
+  setSelectedItem: (item: string | null) => any;
+};
+
+type DocumentFieldProp = {
+  value?: any;
+  type?: string;
+  label?: string;
+  displayLabel?: string;
 };
 
 type DocumentDataProp = {
   id: string;
   selected?: boolean;
   onClick?: () => any;
-  document: {
-    [prop: string]: any;
-  };
+  document: DocumentData;
+};
+
+type DocumentData = {
+  id: string;
+  fields?: DocumentFieldProp[];
 };
 
 type DocumentDetailsComponentProps = {
   document: DocumentItemProp | undefined | null;
+};
+
+type FieldRowProp = {
+  field: DocumentFieldProp;
 };

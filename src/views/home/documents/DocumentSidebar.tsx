@@ -65,7 +65,7 @@ function DocumentSidebar(props: DocumentSidebarComponentProps) {
       props.documents && props.documents.map((doc: DocumentItemProp, key: number) => {
         const data = doc.data();
 
-        return <DocumentItem id={data.id} key={data.id} document={data} selected={props.selectedItem === key} onClick={() => props.setSelectedItem(key)} />
+        return <DocumentItem id={data.id} key={data.id} document={data} selected={props.selectedItem === data.id} onClick={() => props.setSelectedItem(props.selectedItem === data.id ? null : data.id)} />
       })
     }
   </div>;

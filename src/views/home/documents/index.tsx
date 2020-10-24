@@ -23,7 +23,7 @@ function Document(props: DocumentComponentProps) {
   const params = useParams<CollectionRoute>();
 
   const classes = useStyles();
-  const [selectedItem, setSelectedItem] = useState<number | null>(null);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   const [documents, loading] = useCollection(props.collection?.route ? getDocumentList(props.collection?.route) : null,
     {
@@ -38,8 +38,8 @@ function Document(props: DocumentComponentProps) {
     <Grid item xs={12} sm={4} className={classes.sidebar}>
       <DocumentSidebar documents={documents?.docs} loading={loading} selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
     </Grid>
-    <Grid item xs={12} sm={8}><DocumentDetails document={selectedItem !== null && documents ? documents?.docs[selectedItem] : null}/></Grid>
-  </Grid>
+    <Grid item xs={12} sm={8}><DocumentDetails document={selectedItem !== null && documents ? documents?.docs.find(doc => doc.id === selectedItem) : null} /></Grid>
+  </Grid>;
 }
 
 export default Document;
