@@ -102,9 +102,8 @@ function CollectionSidebar(props: CollectionComponentProps) {
       if (collectionIndex >= 0) {
         return handleSelectItem(collectionIndex);
       }
-
-      history.push(ROUTES.HOME);
     }
+    history.push(ROUTES.HOME);
   }, [collections, params.collection, history, handleSelectItem]);
 
   return <div>
