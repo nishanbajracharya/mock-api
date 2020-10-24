@@ -6,7 +6,7 @@ import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 import CollectionSidebar from './CollectionSidebar';
 import CollectionDetails from './CollectionDetails';
-import { getCollectionList } from '../../../services/collection';
+import { deleteCollection, getCollectionList } from '../../../services/collection';
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -29,6 +29,10 @@ function Collections() {
 
   const [collections, loading] = useDocumentData<CollectionProp>(getCollectionList());
 
+  function handleDelete(collection: CollectionItemProp | null | undefined) {
+    return deleteCollection(collection, collections?.list);
+  }
+
   return (
     <Paper elevation={2}>
       <div className={classes.header}>Collections</div>
@@ -36,7 +40,9 @@ function Collections() {
         <Grid item xs={12} sm={3} className={classes.sidebar}>
           <CollectionSidebar collections={collections} loading={loading} selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
         </Grid>
-        <Grid item xs={12} sm={9}><CollectionDetails collection={selectedItem !== null ? collections?.list[selectedItem] : null} /></Grid>
+        <Grid item xs={12} sm={9}>
+          <CollectionDetails onDelete={handleDelete} collection={selectedItem !== null ? collections?.list[selectedItem] : null} />
+        </Grid>
       </Grid>
     </Paper>
   );

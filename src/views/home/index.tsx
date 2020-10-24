@@ -20,9 +20,9 @@ function Home() {
       <AppBar />
       <Container className={classes.container}>
         <Collections />
-        </Container>
-      </div>
-    </Fade>
+      </Container>
+    </div>
+  </Fade>;
 }
 
 export default Home;
