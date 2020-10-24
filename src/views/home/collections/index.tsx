@@ -41,7 +41,7 @@ function Collections() {
           <CollectionSidebar collections={collections} loading={loading} selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
         </Grid>
         <Grid item xs={12} sm={9}>
-          <CollectionDetails onDelete={handleDelete} collection={selectedItem !== null ? collections?.list[selectedItem] : null} />
+          <CollectionDetails onDelete={handleDelete} collection={selectedItem !== null ? collections?.list[selectedItem] : null} collections={collections?.list} />
         </Grid>
       </Grid>
     </Paper>

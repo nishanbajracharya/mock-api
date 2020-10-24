@@ -134,3 +134,27 @@ async function deleteQueryBatch(
     deleteQueryBatch(query, resolve);
   });
 }
+
+export function updateSchema(
+  collection: string,
+  fields: DocumentFieldProp[],
+  collections: CollectionItemProp[]
+) {
+  const list = collections.map((col) => {
+    if (collection === col.collectionName) {
+      return {
+        ...col,
+        fields: fields.map((field) => ({ ...field, value: '' })),
+      };
+    }
+
+    return col;
+  });
+
+  return firestore
+    .collection(FIRESTORE_COLLECTION.META)
+    .doc(FIRESTORE_COLLECTION.META_COLECTION)
+    .set({
+      list,
+    });
+}

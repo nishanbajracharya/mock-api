@@ -142,7 +142,7 @@ function DocumentForm(props: DocumentFormProps) {
   return <div>
     <Formik
       initialValues={props.initialValues || {
-        fields: [],
+        fields: props.fieldSchema || [],
         displayLabel: '',
       }}
       validationSchema={createDocumentSchema}
@@ -175,7 +175,7 @@ function DocumentForm(props: DocumentFormProps) {
         ({ values, submitForm, isSubmitting, setFieldValue }) => (
           <Form className={classes.form}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={values.fields.length > 0 ? 12 : 11}>
+              <Grid item xs={12} sm={values && values.fields && values.fields.length > 0 ? 12 : 11}>
                 <Field
                   component={TextField}
                   name="displayLabel"
@@ -186,7 +186,7 @@ function DocumentForm(props: DocumentFormProps) {
                   margin="normal"
                 />
               </Grid>
-              {values.fields.length === 0 && <Grid item xs={12} sm={1} className={classes.addIconContainer}>
+              {values && values.fields && values.fields.length === 0 && <Grid item xs={12} sm={1} className={classes.addIconContainer}>
                 <IconButton onClick={() => setFieldValue('fields', [{ type: 'string', label: '', value: '', displayLabel: '' }])} >
                   <AddIcon />
                 </IconButton>

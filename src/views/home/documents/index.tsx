@@ -9,7 +9,7 @@ import DocumentForm from './DocumentForm';
 import Modal from '../../../components/Modal';
 import DocumentDetails from './DocumentDetails';
 import documentService from '../../../services/document';
-import { getDocumentList } from '../../../services/collection';
+import { getDocumentList, updateSchema } from '../../../services/collection';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -71,16 +71,25 @@ function Document(props: DocumentComponentProps) {
     setEditData(null);
   };
 
-  function addDocument(document: DocumentData) {
+  async function addDocument(document: DocumentData) {
+    await updateCollectionSchema(props.collection?.collectionName, document.fields, props.collections);
     return documentService.addDocument(params.collection, document);
   }
 
-  function editDocument(document: DocumentData) {
+  async function editDocument(document: DocumentData) {
+    await updateCollectionSchema(props.collection?.collectionName, document.fields, props.collections);
     return documentService.editDocument(params.collection, selectedItem, document);
   }
 
   function deleteDocument(id: string | undefined | null) {
     return documentService.deleteDocument(params.collection, id);
+  }
+
+  function updateCollectionSchema(collection: string | null | undefined, fields: DocumentFieldProp[] | undefined, collections: CollectionItemProp[] | null | undefined) {
+    if (fields && collection && collections) {
+      return updateSchema(collection, fields, collections);
+    }
+    return Promise.resolve();
   }
 
   function handleEdit(document: DocumentData) {
@@ -109,6 +118,7 @@ function Document(props: DocumentComponentProps) {
         document={selectedItem !== null && documents ? documents?.docs.find(doc => doc.id === selectedItem) : null}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        collection={props.collection}
       />
     </Grid>
 
@@ -119,7 +129,12 @@ function Document(props: DocumentComponentProps) {
     >
       <div className={classes.paper}>
         <div className={classes.modalHeaderText}>Enter document details</div>
-        <DocumentForm initialValues={editData} submit={editData ? editDocument : addDocument} handleClose={handleClose} />
+        <DocumentForm
+          initialValues={editData}
+          submit={editData ? editDocument : addDocument}
+          handleClose={handleClose}
+          fieldSchema={props.collection?.fields}
+        />
       </div>
     </Modal>
   </Grid>;

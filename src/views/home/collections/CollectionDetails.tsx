@@ -51,7 +51,7 @@ function CollectionDetails(props: CollectionDetailComponentProps) {
         <DeleteIcon />
       </IconButton>
     </div>
-    <Document collection={props.collection} />
+    <Document collection={props.collection} collections={props.collections} />
   </div>;
 }
 

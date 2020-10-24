@@ -10,6 +10,7 @@ type CollectionItemProp = {
   selected?: boolean;
   onClick?: () => any;
   collectionName?: string;
+  fields?: DocumentFieldProp[];
 };
 
 type CollectionProp = {
@@ -17,18 +18,22 @@ type CollectionProp = {
 };
 
 type CollectionFormProps = {
-  create: (collection: {title: string, route: string}) => Promise<void> | undefined;
+  create: (collection: {
+    title: string;
+    route: string;
+  }) => Promise<void> | undefined;
   handleClose: () => void;
 };
 
 type CollectionComponentProps = {
   collections?: CollectionProp;
   loading: BooleanSchema;
-  selectedItem: number | null,
-  setSelectedItem: (item: number | null) => any
-}
+  selectedItem: number | null;
+  setSelectedItem: (item: number | null) => any;
+};
 
 type CollectionDetailComponentProps = {
   collection: CollectionItemProp | null | undefined;
+  collections?: CollectionItemProps[] | null | undefined;
   onDelete?: (collection: CollectionItemProp | null | undefined) => any;
-}
+};

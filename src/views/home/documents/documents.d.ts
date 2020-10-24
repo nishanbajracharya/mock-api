@@ -1,5 +1,6 @@
 type DocumentComponentProps = {
   collection: CollectionItemProp | null | undefined;
+  collections?: CollectionItemProp[] | null | undefined;
 };
 
 type DocumentItemProp = DocumentDataHook & {};
@@ -36,6 +37,7 @@ type DocumentData = {
 type DocumentDetailsComponentProps = {
   onEdit?: (document: DocumentData) => any;
   document: DocumentItemProp | undefined | null;
+  collection: CollectionItemProp | null | undefined;
   onDelete?: (id: string | null | undefined) => any;
 };
 
@@ -44,9 +46,10 @@ type FieldRowProp = {
 };
 
 type DocumentFormProps = {
-  initialValues?: DocumentDate;
+  initialValues?: DocumentData | null | undefined;
   submit: (document: DocumentData) => Promise<void> | undefined;
   handleClose: () => void;
+  fieldSchema?: DocumentFieldProp[] | undefined | null;
 };
 
 type DocumentFieldComponentProps = {
