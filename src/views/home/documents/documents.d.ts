@@ -34,8 +34,9 @@ type DocumentData = {
 };
 
 type DocumentDetailsComponentProps = {
-  document: DocumentItemProp | undefined | null;
   onEdit?: (document: DocumentData) => any;
+  document: DocumentItemProp | undefined | null;
+  onDelete?: (id: string | null | undefined) => any;
 };
 
 type FieldRowProp = {

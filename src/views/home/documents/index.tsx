@@ -78,10 +78,18 @@ function Document(props: DocumentComponentProps) {
     return documentService.editDocument(params.collection, selectedItem, document);
   }
 
+  function deleteDocument(id: string | undefined | null) {
+    return documentService.deleteDocument(params.collection, id);
+  }
+
   function handleEdit(document: DocumentData) {
     setEditData(document);
 
     handleOpen();
+  }
+
+  function handleDelete(id: string | undefined | null) {
+    return deleteDocument(id);
   }
 
   return <Grid container className={classes.container}>
@@ -99,6 +107,7 @@ function Document(props: DocumentComponentProps) {
       <DocumentDetails
         document={selectedItem !== null && documents ? documents?.docs.find(doc => doc.id === selectedItem) : null}
         onEdit={handleEdit}
+        onDelete={handleDelete}
       />
     </Grid>
 

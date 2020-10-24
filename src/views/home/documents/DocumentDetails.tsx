@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core';
 import ListIcon from '@material-ui/icons/List';
 import EditIcon from '@material-ui/icons/Edit';
 import ListItem from '@material-ui/core/ListItem';
+import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -53,6 +54,9 @@ function DocumentDetails(props: DocumentDetailsComponentProps) {
       <ListItemSecondaryAction>
         <IconButton edge="end" aria-label="edit" onClick={() => props.onEdit && props.onEdit(data)}>
           <EditIcon />
+        </IconButton>
+        <IconButton edge="end" aria-label="delete" onClick={() => props.onDelete && props.onDelete(data.id)}>
+          <DeleteIcon />
         </IconButton>
       </ListItemSecondaryAction>
     </ListItem>
