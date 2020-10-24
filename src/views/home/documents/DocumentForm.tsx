@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Alert from '@material-ui/lab/Alert';
 import { Select } from 'formik-material-ui';
+import AddIcon from '@material-ui/icons/Add';
 import Button from '@material-ui/core/Button';
 import { TextField } from 'formik-material-ui';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -17,6 +18,7 @@ import { getErrorMessage, ErrorProp } from '../../../utils/errorHandler';
 const useStyles = makeStyles((theme) => ({
   form: {
     width: '100%',
+    minWidth: theme.breakpoints.width('sm'),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -30,15 +32,30 @@ const useStyles = makeStyles((theme) => ({
   alert: {
     marginTop: theme.spacing(2),
   },
+  fieldArrayList: {
+    marginBottom: theme.spacing(2),
+  },
+  fieldArrayContainer: {
+    marginTop: theme.spacing(1),
+  },
+  addIconContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 }));
 
 function DocumentField(props: DocumentFieldComponentProps) {
-  return <div>
+  const classes = useStyles();
+
+  return <div className={classes.fieldArrayContainer}>
     {
       props.values.fields && props.values.fields.map((field: DocumentFieldProp, index: number) => {
-        return <div key={index}>
+        const lastItem = props.values.fields?.length === index + 1;
+
+        return <div key={index} className={classes.fieldArrayList}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={2}>
               <Field
                 component={TextField}
                 name={`fields.${index}.label`}
@@ -53,7 +70,7 @@ function DocumentField(props: DocumentFieldComponentProps) {
                 component={TextField}
                 name={`fields.${index}.displayLabel`}
                 type="text"
-                label="DisplayLabel"
+                label="Display Label"
                 variant="outlined"
                 fullWidth
               />
@@ -72,16 +89,34 @@ function DocumentField(props: DocumentFieldComponentProps) {
                 <MenuItem value="boolean">Boolean</MenuItem>
               </Field>
             </Grid>
-            <Grid item xs={12} sm={3}>
-              <Field
-                component={TextField}
-                name={`fields.${index}.value`}
-                type={field.type}
-                label="Value"
-                variant="outlined"
-                fullWidth
-              />
+            <Grid item xs={12} sm={lastItem ? 3 : 4}>
+              {field.type === 'boolean' ?
+                <Field
+                  component={Select}
+                  name={`fields.${index}.value`}
+                  type="text"
+                  label="Value"
+                  variant="outlined"
+                  fullWidth
+                >
+                  <MenuItem value="true">True</MenuItem>
+                  <MenuItem value="false">False</MenuItem>
+                </Field> :
+                <Field
+                  component={TextField}
+                  name={`fields.${index}.value`}
+                  type={field.type}
+                  label="Value"
+                  variant="outlined"
+                  fullWidth
+                />
+              }
             </Grid>
+            {lastItem && <Grid item xs={12} sm={1}>
+              <IconButton onClick={() => props.arrayHelpers.push({ type: 'string', label: '', value: '', displayLabel: '' })}>
+                <AddIcon />
+              </IconButton>
+            </Grid>}
             <Grid item xs={12} sm={1}>
               <IconButton onClick={() => props.arrayHelpers.remove(index)}>
                 <DeleteIcon />
@@ -91,13 +126,6 @@ function DocumentField(props: DocumentFieldComponentProps) {
         </div>
       })
     }
-    <Button
-      fullWidth
-      variant="contained"
-      onClick={() => props.arrayHelpers.push({ type: 'string', label: '', value: '', displayLabel: '' })}
-    >
-      Add New Field
-    </Button>
   </div>
 }
 
@@ -131,17 +159,26 @@ function DocumentForm(props: DocumentFormProps) {
       }}
     >
       {
-        ({ values, submitForm, isSubmitting }) => (
+        ({ values, submitForm, isSubmitting, setFieldValue }) => (
           <Form className={classes.form}>
-            <Field
-              component={TextField}
-              name="displayLabel"
-              type="text"
-              label="Display Label"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-            />
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={values.fields.length > 0 ? 12 : 11}>
+                <Field
+                  component={TextField}
+                  name="displayLabel"
+                  type="text"
+                  label="Display Label"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                />
+              </Grid>
+              {values.fields.length === 0 && <Grid item xs={12} sm={1} className={classes.addIconContainer}>
+                <IconButton onClick={() => setFieldValue('fields', [{ type: 'string', label: '', value: '', displayLabel: '' }])} >
+                  <AddIcon />
+                </IconButton>
+              </Grid>}
+            </Grid>
             <FieldArray
               name="fields"
               render={arrayHelpers => <DocumentField arrayHelpers={arrayHelpers} values={values} />}

@@ -26,18 +26,19 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
   },
   paper: {
-    outline: 'none',
     border: 'none',
+    outline: 'none',
     borderRadius: 4,
+    maxWidth: '80vw',
     boxSizing: 'border-box',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    maxWidth: '80vw',
     backgroundColor: theme.palette.background.paper,
   },
   modalHeaderText: {
+    fontSize: 18,
     fontWeight: 500,
-    marginTop: theme.spacing(2),
+    margin: theme.spacing(2, 0),
   },
 }));
 

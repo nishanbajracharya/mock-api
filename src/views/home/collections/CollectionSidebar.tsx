@@ -39,8 +39,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
   },
   modalHeaderText: {
+    fontSize: 18,
     fontWeight: 500,
-    marginTop: theme.spacing(2),
+    margin: theme.spacing(2, 0),
   },
   list: {
     padding: 0,
@@ -67,7 +68,7 @@ function CollectionSidebar(props: CollectionComponentProps) {
   }
 
   const classes = useStyles();
-  
+
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -94,17 +95,18 @@ function CollectionSidebar(props: CollectionComponentProps) {
 
 
   useEffect(() => {
+    if (!loading && (!collections || !collections.list || collections.list.length === 0)) {
+      return history.push(ROUTES.HOME);
+    }
+
     if (params.collection && collections && collections.list && collections.list.length > 0) {
       const collectionRoute = '/' + params.collection;
 
       const collectionIndex = collections.list.findIndex(c => c.route === collectionRoute);
 
-      if (collectionIndex >= 0) {
-        return handleSelectItem(collectionIndex);
-      }
+      return collectionIndex >= 0 ? handleSelectItem(collectionIndex) : history.push(ROUTES.HOME);
     }
-    history.push(ROUTES.HOME);
-  }, [collections, params.collection, history, handleSelectItem]);
+  }, [collections, params.collection, history, handleSelectItem, loading]);
 
   return <div>
     <List component="nav" className={classes.list}>

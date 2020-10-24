@@ -61,7 +61,7 @@ function DocumentDetails(props: DocumentDetailsComponentProps) {
       </ListItemSecondaryAction>
     </ListItem>
     {
-      data.fields && data.fields.map((field, key) => <ListItem key={key}>
+      data.fields && data.fields.filter(field => field.label || field.displayLabel).map((field, key) => <ListItem key={key}>
         <ListItemText primary={<FieldRow field={field} />} />
       </ListItem>)
     }
