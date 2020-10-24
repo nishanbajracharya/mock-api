@@ -7,8 +7,8 @@ import { TextField } from 'formik-material-ui';
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { createColllectionSchema } from '../../schema/collection';
-import { getErrorMessage, ErrorProp } from '../../utils/errorHandler';
+import { createColllectionSchema } from '../../../schema/collection';
+import { getErrorMessage, ErrorProp } from '../../../utils/errorHandler';
 
 
 const useStyles = makeStyles((theme) => ({

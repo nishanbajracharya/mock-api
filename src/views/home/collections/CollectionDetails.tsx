@@ -1,4 +1,5 @@
 import React from 'react';
+import Document from '../documents';
 import { useParams } from 'react-router-dom';
 import ListIcon from '@material-ui/icons/List';
 import { makeStyles } from '@material-ui/core/styles';
@@ -22,6 +23,9 @@ const useStyles = makeStyles(theme => ({
     borderBottom: '1px solid #ddd',
     background: theme.palette.background.default,
   },
+  content: {
+    height: '100%',
+  },
 }));
 
 function CollectionDetails(props: CollectionDetailComponentProps) {
@@ -30,13 +34,14 @@ function CollectionDetails(props: CollectionDetailComponentProps) {
 
   if (!params.collection) {
     return <div className={classes.empty}>
-      <ListIcon color="disabled" className={classes.emptyIcon}/>
+      <ListIcon color="disabled" className={classes.emptyIcon} />
       <div>No Collection Selected</div>
     </div>;
   }
 
-  return <div>
+  return <div className={classes.content}>
     <div className={classes.header}>{props.collection?.title}</div>
+    <Document />
   </div>;
 }
 

@@ -10,10 +10,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 
-import Modal from '../../components/Modal';
+import Modal from '../../../components/Modal';
 import CollectionForm from './CollectionForm';
-import { ROUTES } from '../../constants/routes';
-import { addNewCollection } from '../../services/collection';
+import { ROUTES } from '../../../constants/routes';
+import { addNewCollection } from '../../../services/collection';
 
 function CollectionItem(props: CollectionItemProp) {
   return <ListItem button selected={props.selected} onClick={props.onClick}>
@@ -42,9 +42,16 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 500,
     marginTop: theme.spacing(2),
   },
+  list: {
+    padding: 0,
+  },
+  addItem: {
+    paddingTop: 10,
+    paddingBottom: 9,
+  },
 }));
 
-function Collections(props: CollectionComponentProps) {
+function CollectionSidebar(props: CollectionComponentProps) {
   const history = useHistory();
   const params = useParams<CollectionRoute>();
 
@@ -60,6 +67,7 @@ function Collections(props: CollectionComponentProps) {
   }
 
   const classes = useStyles();
+  
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -100,8 +108,8 @@ function Collections(props: CollectionComponentProps) {
   }, [collections, params.collection, history, handleSelectItem]);
 
   return <div>
-    <List component="nav">
-      <ListItem button onClick={handleOpen}>
+    <List component="nav" className={classes.list}>
+      <ListItem button onClick={handleOpen} className={classes.addItem}>
         <ListItemIcon><Add /></ListItemIcon>
         <ListItemText primary="Add a collection" />
       </ListItem>
@@ -136,4 +144,4 @@ function Collections(props: CollectionComponentProps) {
   </div>;
 }
 
-export default Collections;
+export default CollectionSidebar;
