@@ -86,6 +86,7 @@ function DocumentField(props: DocumentFieldComponentProps) {
               >
                 <MenuItem value="string">String</MenuItem>
                 <MenuItem value="number">Number</MenuItem>
+                <MenuItem value="date">Date</MenuItem>
                 <MenuItem value="boolean">Boolean</MenuItem>
               </Field>
             </Grid>
@@ -147,7 +148,19 @@ function DocumentForm(props: DocumentFormProps) {
       validationSchema={createDocumentSchema}
       onSubmit={(values, { setSubmitting }) => {
         props.submit({
-          fields: values.fields,
+          fields: values.fields && values.fields.map((field: DocumentFieldProp) => {
+            const value = (() => {
+              if (field.type === 'string') return field.value.toString();
+              if (field.type === 'number') return field.value ? +field.value : null;
+              if (field.type === 'boolean') return field.value === 'true' ? true : false;
+              if (field.type === 'date') return field.value;
+            })();
+
+            return {
+              ...field,
+              value,
+            }
+          }),
           displayLabel: values.displayLabel,
         })?.then(() => {
           props.handleClose();

@@ -32,7 +32,7 @@ function FieldRow(props: FieldRowProp) {
   const classes = useStyles();
 
   return <div>
-    <span className={classes.displayLabel}>{props.field.displayLabel || props.field.label}{props.field.type && ` (${props.field.type})`}:</span> <span>{props.field.value}</span>
+    <span className={classes.displayLabel}>{props.field.displayLabel || props.field.label}{props.field.type && ` (${props.field.type})`}:</span> <span>{props.field.value.toString()}</span>
   </div>;
 }
 

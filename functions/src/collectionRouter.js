@@ -26,7 +26,10 @@ router.get('/:collectionID', async (req, res, next) => {
     .then(([list, collection]) => {
       return res.json({
         title: collection.title,
-        list,
+        list: list.map(listItem => ({
+          id: listItem.id,
+          ...((listItem.fields || []).reduce((acc, current) => ({ ...acc, [current.label || current.displayLabel]: current.value }), {})),
+        })),
       });
     })
     .catch((err) => {
