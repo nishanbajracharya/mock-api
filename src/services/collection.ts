@@ -65,3 +65,10 @@ export async function addNewCollection(
     { merge: true }
   );
 }
+
+export function getDocumentList(collection: string | undefined) {
+  if (!collection) {
+    return;
+  }
+  return firestore.collection(collection);
+}

@@ -1,33 +1,22 @@
-import React from 'react';
 import Add from '@material-ui/icons/Add';
 import List from '@material-ui/core/List';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ListItem from '@material-ui/core/ListItem';
+import React, { useEffect, useCallback } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import { useDocumentData } from 'react-firebase-hooks/firestore';
 
-import Modal from '../../components/Modal';
+import Modal from '../../../components/Modal';
 import CollectionForm from './CollectionForm';
-import { addNewCollection, getCollectionList } from '../../services/collection';
-
-type CollectionItemProp = {
-  title: string;
-  route: string;
-  createdAt?: number;
-  updatedAt?: number;
-  onClick?: () => {};
-};
-
-type CollectionProp = {
-  list: [];
-};
+import { ROUTES } from '../../../constants/routes';
+import { addNewCollection } from '../../../services/collection';
 
 function CollectionItem(props: CollectionItemProp) {
-  return <ListItem button>
+  return <ListItem button selected={props.selected} onClick={props.onClick}>
     <ListItemAvatar><Avatar>{props.title[0]}</Avatar></ListItemAvatar>
     <ListItemText primary={props.title} secondary={props.route} />
   </ListItem>
@@ -53,10 +42,20 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 500,
     marginTop: theme.spacing(2),
   },
+  list: {
+    padding: 0,
+  },
+  addItem: {
+    paddingTop: 10,
+    paddingBottom: 9,
+  },
 }));
 
-function Collections() {
-  const [collections, loading] = useDocumentData<CollectionProp>(getCollectionList());
+function CollectionSidebar(props: CollectionComponentProps) {
+  const history = useHistory();
+  const params = useParams<CollectionRoute>();
+
+  const { collections, loading, selectedItem, setSelectedItem } = props;
 
   function addCollection(collection: CollectionItemProp) {
     if (collection) {
@@ -68,6 +67,7 @@ function Collections() {
   }
 
   const classes = useStyles();
+  
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -78,18 +78,53 @@ function Collections() {
     setOpen(false);
   };
 
+  const getCollectionItemByIndex = useCallback((list: CollectionItemProp[] | undefined, index: number) => {
+    return list ? list[index] : null;
+  }, []);
+
+  const handleSelectItem = useCallback((index: number) => {
+    setSelectedItem(index);
+
+    const collection = getCollectionItemByIndex(collections?.list, index);
+
+    if (collection) {
+      history.push(collection?.route);
+    }
+  }, [history, getCollectionItemByIndex, collections?.list, setSelectedItem]);
+
+
+  useEffect(() => {
+    if (params.collection && collections && collections.list && collections.list.length > 0) {
+      const collectionRoute = '/' + params.collection;
+
+      const collectionIndex = collections.list.findIndex(c => c.route === collectionRoute);
+
+      if (collectionIndex >= 0) {
+        return handleSelectItem(collectionIndex);
+      }
+
+      history.push(ROUTES.HOME);
+    }
+  }, [collections, params.collection, history, handleSelectItem]);
+
   return <div>
-    <List component="nav">
-      <ListItem button onClick={handleOpen}>
+    <List component="nav" className={classes.list}>
+      <ListItem button onClick={handleOpen} className={classes.addItem}>
         <ListItemIcon><Add /></ListItemIcon>
         <ListItemText primary="Add a collection" />
       </ListItem>
       {
         collections?.list && collections.list.map((collection: CollectionItemProp, key) =>
-          <CollectionItem key={key} title={collection.title} route={collection.route} />)
+          <CollectionItem
+            key={key}
+            title={collection.title}
+            route={collection.route}
+            selected={key === selectedItem}
+            onClick={() => handleSelectItem(key)}
+          />)
       }
       {
-        loading && <ListItem>
+        loading && <ListItem disabled>
           <ListItemIcon><Skeleton variant="circle" width={40} height={40} /></ListItemIcon>
           <ListItemText primary={<Skeleton variant="text" />} secondary={<Skeleton variant="text" />} />
         </ListItem>
@@ -109,4 +144,4 @@ function Collections() {
   </div>;
 }
 
-export default Collections;
+export default CollectionSidebar;

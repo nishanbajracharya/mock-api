@@ -56,7 +56,7 @@ function Router() {
   return <BrowserRouter>
     <Switch>
       <AuthRoute path={ROUTES.LOGIN}><Login /></AuthRoute>
-      <PrivateRoute path={ROUTES.HOME}>
+      <PrivateRoute path={[ROUTES.COLLECTION, ROUTES.HOME]}>
         <Home />
       </PrivateRoute>
     </Switch>
