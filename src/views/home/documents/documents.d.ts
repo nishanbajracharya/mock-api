@@ -47,3 +47,8 @@ type DocumentFormProps = {
   submit: (document: DocumentData) => Promise<void> | undefined;
   handleClose: () => void;
 };
+
+type DocumentFieldComponentProps = {
+  values: DocumentData;
+  arrayHelpers: FieldArrayRenderProps;
+};

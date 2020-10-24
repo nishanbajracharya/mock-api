@@ -5,13 +5,14 @@ import { Select } from 'formik-material-ui';
 import Button from '@material-ui/core/Button';
 import { TextField } from 'formik-material-ui';
 import MenuItem from '@material-ui/core/MenuItem';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { createDocumentSchema } from '../../../schema/document';
 import { getErrorMessage, ErrorProp } from '../../../utils/errorHandler';
-
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -30,6 +31,75 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
+
+function DocumentField(props: DocumentFieldComponentProps) {
+  return <div>
+    {
+      props.values.fields && props.values.fields.map((field: DocumentFieldProp, index: number) => {
+        return <div key={index}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={3}>
+              <Field
+                component={TextField}
+                name={`fields.${index}.label`}
+                type="text"
+                label="Label"
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <Field
+                component={TextField}
+                name={`fields.${index}.displayLabel`}
+                type="text"
+                label="DisplayLabel"
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <Field
+                component={Select}
+                name={`fields.${index}.type`}
+                type="text"
+                label="Type"
+                variant="outlined"
+                fullWidth
+              >
+                <MenuItem value="string">String</MenuItem>
+                <MenuItem value="number">Number</MenuItem>
+                <MenuItem value="boolean">Boolean</MenuItem>
+              </Field>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <Field
+                component={TextField}
+                name={`fields.${index}.value`}
+                type={field.type}
+                label="Value"
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={1}>
+              <IconButton onClick={() => props.arrayHelpers.remove(index)}>
+                <DeleteIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </div>
+      })
+    }
+    <Button
+      fullWidth
+      variant="contained"
+      onClick={() => props.arrayHelpers.push({ type: 'string', label: '', value: '', displayLabel: '' })}
+    >
+      Add New Field
+    </Button>
+  </div>
+}
 
 function DocumentForm(props: DocumentFormProps) {
   const classes = useStyles();
@@ -61,7 +131,7 @@ function DocumentForm(props: DocumentFormProps) {
       }}
     >
       {
-        ({ values, submitForm, setFieldValue, isSubmitting }) => (
+        ({ values, submitForm, isSubmitting }) => (
           <Form className={classes.form}>
             <Field
               component={TextField}
@@ -74,71 +144,7 @@ function DocumentForm(props: DocumentFormProps) {
             />
             <FieldArray
               name="fields"
-              render={arrayHelpers => {
-
-                return <div>
-                  {
-                    values.fields && values.fields.map((field: DocumentFieldProp, index: number) => {
-                      return <div key={index}>
-                        <Grid container spacing={2}>
-                          <Grid item xs={12} sm={3}>
-                            <Field
-                              component={TextField}
-                              name={`fields.${index}.label`}
-                              type="text"
-                              label="Label"
-                              variant="outlined"
-                              fullWidth
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={3}>
-                            <Field
-                              component={TextField}
-                              name={`fields.${index}.displayLabel`}
-                              type="text"
-                              label="DisplayLabel"
-                              variant="outlined"
-                              fullWidth
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={3}>
-                            <Field
-                              component={Select}
-                              name={`fields.${index}.type`}
-                              type="text"
-                              label="Type"
-                              variant="outlined"
-                              fullWidth
-                            >
-                              <MenuItem value="string">String</MenuItem>
-                              <MenuItem value="number">Number</MenuItem>
-                              <MenuItem value="boolean">Boolean</MenuItem>
-                            </Field>
-                          </Grid>
-                          <Grid item xs={12} sm={3}>
-                            <Field
-                              component={TextField}
-                              name={`fields.${index}.value`}
-                              type={field.type}
-                              label="Value"
-                              variant="outlined"
-                              fullWidth
-                            />
-                          </Grid>
-                        </Grid>
-                      </div>
-                    })
-                  }
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    disabled={isSubmitting}
-                    onClick={() => arrayHelpers.push({ type: 'string', label: '', value: '', displayLabel: '' })}
-                  >
-                    Add New Field
-                </Button>
-                </div>
-              }}
+              render={arrayHelpers => <DocumentField arrayHelpers={arrayHelpers} values={values} />}
             />
             <Button
               fullWidth
