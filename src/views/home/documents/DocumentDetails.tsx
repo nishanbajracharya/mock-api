@@ -51,7 +51,7 @@ function DocumentDetails(props: DocumentDetailsComponentProps) {
     <ListItem>
       <ListItemText primary={<FieldRow field={{ displayLabel: 'ID', value: data.id }} />} />
       <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="edit">
+        <IconButton edge="end" aria-label="edit" onClick={() => props.onEdit && props.onEdit(data)}>
           <EditIcon />
         </IconButton>
       </ListItemSecondaryAction>

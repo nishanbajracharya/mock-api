@@ -7,7 +7,7 @@ import { TextField } from 'formik-material-ui';
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { createColllectionSchema } from '../../../schema/collection';
+import { createCollectionSchema } from '../../../schema/collection';
 import { getErrorMessage, ErrorProp } from '../../../utils/errorHandler';
 
 
@@ -33,7 +33,7 @@ function CollectionForm(props: CollectionFormProps) {
   const classes = useStyles();
 
   const [error, setError] = useState<ErrorProp>({});
-  
+
   function clearError() {
     setError({});
   }
@@ -44,7 +44,7 @@ function CollectionForm(props: CollectionFormProps) {
         title: '',
         route: '',
       }}
-      validationSchema={createColllectionSchema}
+      validationSchema={createCollectionSchema}
       onSubmit={(values, { setSubmitting }) => {
         props.create({
           title: values.title,
