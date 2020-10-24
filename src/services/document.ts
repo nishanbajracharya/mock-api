@@ -31,7 +31,9 @@ export function editDocument(
 
   const collectionRef = firestore.collection(collection);
 
-  return collectionRef.doc(id).set(document, { merge: true });
+  return collectionRef
+    .doc(id)
+    .set({ ...document, updatedAt: Date.now() }, { merge: true });
 }
 
 export function deleteDocument(
