@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     fontWeight: 500,
     alignItems: 'center',
-    padding: theme.spacing(0, 2),
+    padding: '2px 16px 1px',
     borderBottom: '1px solid #ddd',
     justifyContent: 'space-between',
     background: theme.palette.background.default,
