@@ -124,7 +124,7 @@ function CollectionSidebar(props: CollectionComponentProps) {
           />)
       }
       {
-        loading && <ListItem>
+        loading && <ListItem disabled>
           <ListItemIcon><Skeleton variant="circle" width={40} height={40} /></ListItemIcon>
           <ListItemText primary={<Skeleton variant="text" />} secondary={<Skeleton variant="text" />} />
         </ListItem>

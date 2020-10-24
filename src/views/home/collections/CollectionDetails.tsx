@@ -41,7 +41,7 @@ function CollectionDetails(props: CollectionDetailComponentProps) {
 
   return <div className={classes.content}>
     <div className={classes.header}>{props.collection?.title}</div>
-    <Document />
+    <Document collection={props.collection}/>
   </div>;
 }
 
