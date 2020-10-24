@@ -9,6 +9,7 @@ type CollectionItemProp = {
   updatedAt?: number;
   selected?: boolean;
   onClick?: () => any;
+  collectionName?: string;
 };
 
 type CollectionProp = {
@@ -29,4 +30,5 @@ type CollectionComponentProps = {
 
 type CollectionDetailComponentProps = {
   collection: CollectionItemProp | null | undefined;
+  onDelete?: (collection: CollectionItemProp | null | undefined) => any;
 }

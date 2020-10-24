@@ -8,25 +8,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 const useStyles = makeStyles(theme => ({
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  paper: {
-    outline: 'none',
-    border: 'none',
-    borderRadius: 4,
-    boxSizing: 'border-box',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    maxWidth: theme.breakpoints.width('sm'),
-    backgroundColor: theme.palette.background.paper,
-  },
-  modalHeaderText: {
-    fontWeight: 500,
-    marginTop: theme.spacing(2),
-  },
   list: {
     padding: 0,
   },
@@ -38,20 +19,16 @@ const useStyles = makeStyles(theme => ({
 
 function DocumentItem(props: DocumentDataProp) {
   return <ListItem button selected={props.selected} onClick={props.onClick}>
-    <ListItemText primary={props.id} />
+    <ListItemText primary={props.document.displayLabel && props.document.displayLabel.trim() ? props.document.displayLabel.trim() : props.id} />
   </ListItem>
 }
 
 function DocumentSidebar(props: DocumentSidebarComponentProps) {
   const classes = useStyles();
 
-  function handleOpen() {
-
-  }
-
   return <div>
     <List component="nav" className={classes.list}>
-      <ListItem button onClick={handleOpen} className={classes.addItem}>
+      <ListItem button onClick={props.handleOpenModal} className={classes.addItem}>
         <ListItemIcon><Add /></ListItemIcon>
         <ListItemText primary="Add a document" />
       </ListItem>
@@ -62,10 +39,16 @@ function DocumentSidebar(props: DocumentSidebarComponentProps) {
       </ListItem>
     }
     {
-      props.documents && props.documents.map((doc: DocumentItemProp, key: number) => {
+      props.documents && props.documents.map((doc: DocumentItemProp) => {
         const data = doc.data();
 
-        return <DocumentItem id={data.id} key={data.id} document={data} selected={props.selectedItem === key} onClick={() => props.setSelectedItem(key)} />
+        return <DocumentItem
+          id={data.id}
+          key={data.id}
+          document={data}
+          selected={props.selectedItem === data.id}
+          onClick={() => props.setSelectedItem(props.selectedItem === data.id ? null : data.id)}
+        />
       })
     }
   </div>;
