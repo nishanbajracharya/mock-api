@@ -25,32 +25,35 @@ router.get('/', async (req, res, next) => {
     });
 });
 
-router.get(['/:collectionID', '/:collectionID/documents'], async (req, res, next) => {
-  const collectionID = req.params.collectionID;
+router.get(
+  ['/:collectionID', '/:collectionID/documents'],
+  async (req, res, next) => {
+    const collectionID = req.params.collectionID;
 
-  return await Promise.all([
-    getCollectionData(collectionID),
-    getCollectionMetadata(collectionID),
-  ])
-    .then(([list, collection]) => {
-      return res.json({
-        title: collection.title,
-        list: list.map((listItem) => ({
-          id: listItem.id,
-          ...(listItem.fields || []).reduce(
-            (acc, current) => ({
-              ...acc,
-              [current.label || current.displayLabel]: current.value,
-            }),
-            {}
-          ),
-        })),
+    return await Promise.all([
+      getCollectionData(collectionID),
+      getCollectionMetadata(collectionID),
+    ])
+      .then(([list, collection]) => {
+        return res.json({
+          title: collection.title,
+          list: list.map((listItem) => ({
+            id: listItem.id,
+            ...(listItem.fields || []).reduce(
+              (acc, current) => ({
+                ...acc,
+                [current.label || current.displayLabel]: current.value,
+              }),
+              {}
+            ),
+          })),
+        });
+      })
+      .catch((err) => {
+        next(new ErrorHandler(500, err));
       });
-    })
-    .catch((err) => {
-      next(new ErrorHandler(500, err));
-    });
-});
+  }
+);
 
 const schema = yup.object().shape({
   displayLabel: yup.string().trim().required('Display Label is required'),
@@ -96,47 +99,55 @@ router.post(
   }
 );
 
-router.get('/:collectionID/documents/:documentID', async (req, res, next) => {
-  const collectionID = req.params.collectionID;
-  const documentID = req.params.documentID;
+router.get(
+  ['/:collectionID/documents/:documentID', '/:collectionID/:documentID'],
+  async (req, res, next) => {
+    const collectionID = req.params.collectionID;
+    const documentID = req.params.documentID;
 
-  return await getDocumentById(collectionID, documentID)
-    .then((response) => {
-      const data = response.data();
-      if (!data) {
-        return next(new ErrorHandler(404, 'No document with the supplied id'));
-      }
+    return await getDocumentById(collectionID, documentID)
+      .then((response) => {
+        const data = response.data();
+        if (!data) {
+          return next(
+            new ErrorHandler(404, 'No document with the supplied id')
+          );
+        }
 
-      return res.json({
-        id: data.id,
-        ...(data.fields || []).reduce(
-          (acc, current) => ({
-            ...acc,
-            [current.label || current.displayLabel]: current.value,
-          }),
-          {}
-        ),
+        return res.json({
+          id: data.id,
+          ...(data.fields || []).reduce(
+            (acc, current) => ({
+              ...acc,
+              [current.label || current.displayLabel]: current.value,
+            }),
+            {}
+          ),
+        });
+      })
+      .catch((err) => {
+        next(new ErrorHandler(500, err));
       });
-    })
-    .catch((err) => {
-      next(new ErrorHandler(500, err));
-    });
-});
+  }
+);
 
-router.delete('/:collectionID/documents/:documentID', async (req, res, next) => {
-  const collectionID = req.params.collectionID;
-  const documentID = req.params.documentID;
+router.delete(
+  ['/:collectionID/documents/:documentID', '/:collectionID/:documentID'],
+  async (req, res, next) => {
+    const collectionID = req.params.collectionID;
+    const documentID = req.params.documentID;
 
-  return await deleteDocumentById(collectionID, documentID)
-    .then(() => {
-      return res.json({
-        success: true,
+    return await deleteDocumentById(collectionID, documentID)
+      .then(() => {
+        return res.json({
+          success: true,
+        });
+      })
+      .catch((err) => {
+        next(new ErrorHandler(500, err));
       });
-    })
-    .catch((err) => {
-      next(new ErrorHandler(500, err));
-    });
-});
+  }
+);
 
 const updateDocumentRouteHandler = async (req, res, next) => {
   const collectionID = req.params.collectionID;
@@ -146,7 +157,6 @@ const updateDocumentRouteHandler = async (req, res, next) => {
 
   return await patchDocument(collectionID, documentID, body)
     .then((response) => {
-      console.log(response);
       return res.json({
         success: true,
       });
@@ -154,10 +164,16 @@ const updateDocumentRouteHandler = async (req, res, next) => {
     .catch((err) => {
       next(new ErrorHandler(500, err));
     });
-}
+};
 
-router.put('/:collectionID/documents/:documentID', updateDocumentRouteHandler);
+router.put(
+  ['/:collectionID/documents/:documentID', '/:collectionID/:documentID'],
+  updateDocumentRouteHandler
+);
 
-router.patch('/:collectionID/documents/:documentID', updateDocumentRouteHandler);
+router.patch(
+  ['/:collectionID/documents/:documentID', '/:collectionID/:documentID'],
+  updateDocumentRouteHandler
+);
 
 module.exports = router;
