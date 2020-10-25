@@ -6,6 +6,9 @@ const {
   getCollectionData,
   getCollectionMetadata,
   createDocument,
+  getDocumentById,
+  deleteDocumentById,
+  patchDocument,
 } = require('./collectionService');
 const { ErrorHandler } = require('./errorHandler');
 
@@ -22,7 +25,7 @@ router.get('/', async (req, res, next) => {
     });
 });
 
-router.get('/:collectionID', async (req, res, next) => {
+router.get(['/:collectionID', '/:collectionID/documents'], async (req, res, next) => {
   const collectionID = req.params.collectionID;
 
   return await Promise.all([
@@ -92,5 +95,69 @@ router.post(
       });
   }
 );
+
+router.get('/:collectionID/documents/:documentID', async (req, res, next) => {
+  const collectionID = req.params.collectionID;
+  const documentID = req.params.documentID;
+
+  return await getDocumentById(collectionID, documentID)
+    .then((response) => {
+      const data = response.data();
+      if (!data) {
+        return next(new ErrorHandler(404, 'No document with the supplied id'));
+      }
+
+      return res.json({
+        id: data.id,
+        ...(data.fields || []).reduce(
+          (acc, current) => ({
+            ...acc,
+            [current.label || current.displayLabel]: current.value,
+          }),
+          {}
+        ),
+      });
+    })
+    .catch((err) => {
+      next(new ErrorHandler(500, err));
+    });
+});
+
+router.delete('/:collectionID/documents/:documentID', async (req, res, next) => {
+  const collectionID = req.params.collectionID;
+  const documentID = req.params.documentID;
+
+  return await deleteDocumentById(collectionID, documentID)
+    .then(() => {
+      return res.json({
+        success: true,
+      });
+    })
+    .catch((err) => {
+      next(new ErrorHandler(500, err));
+    });
+});
+
+const updateDocumentRouteHandler = async (req, res, next) => {
+  const collectionID = req.params.collectionID;
+  const documentID = req.params.documentID;
+
+  const body = req.body;
+
+  return await patchDocument(collectionID, documentID, body)
+    .then((response) => {
+      console.log(response);
+      return res.json({
+        success: true,
+      });
+    })
+    .catch((err) => {
+      next(new ErrorHandler(500, err));
+    });
+}
+
+router.put('/:collectionID/documents/:documentID', updateDocumentRouteHandler);
+
+router.patch('/:collectionID/documents/:documentID', updateDocumentRouteHandler);
 
 module.exports = router;

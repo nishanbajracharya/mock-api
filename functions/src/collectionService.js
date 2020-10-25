@@ -65,11 +65,55 @@ function createDocument(collectionID, body) {
   });
 }
 
+async function patchDocument(collectionID, documentID, body) {
+  const collectionRef = admin.firestore().collection(collectionID);
+
+  const initial = await collectionRef.doc(documentID).get();
+
+  const fieldsToUpdate = body.fields.map(field => field.label);
+
+  const updatedFields = initial.data().fields.map(field => {
+    if (!fieldsToUpdate.includes(field.label)) return field;
+
+    return {
+      ...field,
+      value: body.fields.find(item => item.label === field.label).value,
+    }
+  });
+
+  const existingFieldLabels = updatedFields.map(field => field.label);
+
+  const newFields = body.fields.filter(field => {
+    return !existingFieldLabels.includes(field.label);
+  });
+
+  return collectionRef.doc(documentID).set({
+    fields: [...updatedFields, ...newFields],
+    updatedAt: Date.now(),
+    id: documentID,
+  }, {merge: true});
+}
+
+function getDocumentById(collectionID, documentID) {
+  const collectionRef = admin.firestore().collection(collectionID);
+
+  return collectionRef.doc(documentID).get();
+}
+
+function deleteDocumentById(collectionID, documentID) {
+  const collectionRef = admin.firestore().collection(collectionID);
+
+  return collectionRef.doc(documentID).delete();
+}
+
 module.exports = {
-  createDocument,
-  getCollectionList,
   getCollection,
-  getCollectionListData,
+  patchDocument,
+  createDocument,
+  getDocumentById,
+  getCollectionList,
   getCollectionData,
+  deleteDocumentById,
+  getCollectionListData,
   getCollectionMetadata,
 };
