@@ -188,7 +188,7 @@ function DocumentForm(props: DocumentFormProps) {
             const value = (() => {
               if (field.type === 'string') return field.value.toString();
               if (field.type === 'number') return field.value ? +field.value : 0;
-              if (field.type === 'boolean') return field.value === 'true' ? true : false;
+              if (field.type === 'boolean') return ['true', true].includes(field.value) ? true : false;
               if (field.type === 'date') return field.value ? new Date(field.value).getTime() : null;
             })();
 
