@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import List from '@material-ui/core/List';
 import { makeStyles } from '@material-ui/core';
 import ListIcon from '@material-ui/icons/List';
@@ -8,6 +8,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+
+import Dialog from '../../../components/Dialog';
 
 const useStyles = makeStyles(theme => ({
   displayLabel: {
@@ -26,6 +28,15 @@ const useStyles = makeStyles(theme => ({
     fontSize: '4rem',
     margin: theme.spacing(1),
   },
+  deleteButton: {
+    background: theme.palette.error.main,
+    '&:hover': {
+      background: theme.palette.error.dark
+    },
+    '&:active': {
+      background: theme.palette.error.light,
+    }
+  },
 }));
 
 function FieldRow(props: FieldRowProp) {
@@ -38,6 +49,7 @@ function FieldRow(props: FieldRowProp) {
 
 function DocumentDetails(props: DocumentDetailsComponentProps) {
   const classes = useStyles();
+  const [openDialog, setOpenDialog] = useState(false);
 
   const data: DocumentData = props.document && props.document.data();
 
@@ -48,6 +60,17 @@ function DocumentDetails(props: DocumentDetailsComponentProps) {
     </div>;
   }
 
+
+  function handleCloseDialog() {
+    setOpenDialog(false);
+  }
+
+  function handleDeleteDocument() {
+    setTimeout(() => props.onDelete && props.onDelete(data.id), 250);
+    handleCloseDialog();
+  }
+
+
   return <List>
     <ListItem>
       <ListItemText primary={<FieldRow field={{ displayLabel: 'ID', value: data.id }} />} />
@@ -55,7 +78,7 @@ function DocumentDetails(props: DocumentDetailsComponentProps) {
         <IconButton edge="end" aria-label="edit" onClick={() => props.onEdit && props.onEdit(data)}>
           <EditIcon />
         </IconButton>
-        <IconButton edge="end" aria-label="delete" onClick={() => props.onDelete && props.onDelete(data.id)}>
+        <IconButton edge="end" aria-label="delete" onClick={() => setOpenDialog(true)}>
           <DeleteIcon />
         </IconButton>
       </ListItemSecondaryAction>
@@ -65,6 +88,20 @@ function DocumentDetails(props: DocumentDetailsComponentProps) {
         <ListItemText primary={<FieldRow field={field} />} />
       </ListItem>)
     }
+
+    <Dialog
+      open={openDialog}
+      cancelButtonText="Cancel"
+      successButtonText="Yes, Delete"
+      handleClose={handleCloseDialog}
+      handleSuccess={handleDeleteDocument}
+      dialogTitle="Do you want to delete this document?"
+      successButtonProps={{
+        variant: 'contained',
+        startIcon: <DeleteIcon />,
+        className: classes.deleteButton,
+      }}
+    />
   </List>;
 }
 
