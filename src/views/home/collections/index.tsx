@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import LaunchIcon from '@material-ui/icons/Launch';
+import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
@@ -11,8 +14,11 @@ import { deleteCollection, getCollectionList } from '../../../services/collectio
 const useStyles = makeStyles(theme => ({
   header: {
     fontWeight: 500,
-    padding: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
+    padding: '2px 16px 1px',
     borderBottom: '1px solid #ddd',
+    justifyContent: 'space-between',
     background: theme.palette.background.default,
   },
   sidebar: {
@@ -35,7 +41,13 @@ function Collections() {
 
   return (
     <Paper elevation={2}>
-      <div className={classes.header}>Collections</div>
+      <div className={classes.header}>Collections
+        <Link href="/api/collections" target="_blank" rel="noopener">
+          <IconButton edge="end">
+            <LaunchIcon />
+          </IconButton>
+        </Link>
+      </div>
       <Grid container>
         <Grid item xs={12} sm={3} className={classes.sidebar}>
           <CollectionSidebar collections={collections} loading={loading} selectedItem={selectedItem} setSelectedItem={setSelectedItem} />

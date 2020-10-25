@@ -53,7 +53,7 @@ function CollectionDetails(props: CollectionDetailComponentProps) {
       </div>
       <div>
         <Link href={`/api/collections/${params.collection}`} target="_blank" rel="noopener">
-          <IconButton>
+          <IconButton edge="end">
             <LaunchIcon />
           </IconButton>
         </Link>
