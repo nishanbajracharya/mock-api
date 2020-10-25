@@ -1,4 +1,4 @@
-const functions = require('firebase-functions');
+// const functions = require('firebase-functions');
 
 const admin = require('./admin');
 
@@ -18,13 +18,14 @@ function getCollection(collectionID) {
 function getCollectionListData() {
   return getCollectionList().then((data) => {
     const projectId = process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT;
-    const region = functions.config().project.region || 'us-central1';
+    // const region = functions.config().project.region || 'us-central1';
 
     return data
       ? data.list.map((item) => {
           return {
             collection: item.title,
-            url: `https://${region}-${projectId}.cloudfunctions.net/api/collections${item.route}`,
+            url: `https://${projectId}.web.app/api/collections${item.route}`,
+            // directUrl: `https://${region}-${projectId}.cloudfunctions.net/app/api/collections${item.route}`,
           };
         }) || []
       : [];
