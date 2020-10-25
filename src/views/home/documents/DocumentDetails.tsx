@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import React, { useState } from 'react';
 import List from '@material-ui/core/List';
 import { makeStyles } from '@material-ui/core';
@@ -42,8 +43,30 @@ const useStyles = makeStyles(theme => ({
 function FieldRow(props: FieldRowProp) {
   const classes = useStyles();
 
+  const value = (() => {
+    if (props.field.type === 'boolean') {
+      if (props.field.value === false) return 'False';
+      if (props.field.value === true) return 'True';
+
+      return '';
+    }
+
+    if (props.field.type === 'number') {
+      return props.field.value;
+    }
+
+    if (!props.field.value) return '';
+
+    if (props.field.type === 'date') {
+      if (typeof props.field.value === 'string') return props.field.value;
+
+      return format(props.field.value, 'yyyy-MM-dd');
+    }
+    return props.field.value.toString();
+  })();
+
   return <div>
-    <span className={classes.displayLabel}>{props.field.displayLabel || props.field.label}{props.field.type && ` (${props.field.type})`}:</span> <span>{props.field.value.toString()}</span>
+    <span className={classes.displayLabel}>{props.field.displayLabel || props.field.label}{props.field.type && ` (${props.field.type})`}:</span> <span>{value}</span>
   </div>;
 }
 

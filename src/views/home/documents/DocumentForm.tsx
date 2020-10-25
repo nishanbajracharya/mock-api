@@ -81,6 +81,7 @@ function FieldValue(props: FieldValueProps) {
       label="Value"
       inputVariant="outlined"
       fullWidth
+      format="yyyy-MM-dd"
     />
   }
 
@@ -149,7 +150,7 @@ function DocumentField(props: DocumentFieldComponentProps) {
               <FieldValue type={field.type} index={index} />
             </Grid>
             {lastItem && <Grid item xs={12} sm={1}>
-              <IconButton onClick={() => props.arrayHelpers.push({ type: 'string', label: '', value: null, displayLabel: '' })}>
+              <IconButton onClick={() => props.arrayHelpers.push({ type: 'string', label: '', value: '', displayLabel: '' })}>
                 <AddIcon />
               </IconButton>
             </Grid>}
@@ -186,9 +187,9 @@ function DocumentForm(props: DocumentFormProps) {
           fields: values.fields && values.fields.map((field: DocumentFieldProp) => {
             const value = (() => {
               if (field.type === 'string') return field.value.toString();
-              if (field.type === 'number') return field.value ? +field.value : null;
+              if (field.type === 'number') return field.value ? +field.value : 0;
               if (field.type === 'boolean') return field.value === 'true' ? true : false;
-              if (field.type === 'date') return field.value;
+              if (field.type === 'date') return field.value ? new Date(field.value).getTime() : null;
             })();
 
             return {
