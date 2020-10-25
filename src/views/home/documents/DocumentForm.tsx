@@ -7,8 +7,11 @@ import Button from '@material-ui/core/Button';
 import { TextField } from 'formik-material-ui';
 import MenuItem from '@material-ui/core/MenuItem';
 import DeleteIcon from '@material-ui/icons/Delete';
+import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
+import FormControl from '@material-ui/core/FormControl';
+import { DatePicker } from 'formik-material-ui-pickers';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -45,6 +48,52 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+type FieldValueProps = {
+  index: number;
+  type: string | undefined;
+};
+
+function FieldValue(props: FieldValueProps) {
+  if (props.type === 'boolean') {
+    return <FormControl fullWidth>
+      <InputLabel htmlFor={`field-value-${props.index}`} variant="outlined">Value</InputLabel>
+      <Field
+        component={Select}
+        name={`fields.${props.index}.value`}
+        type="text"
+        label="Value"
+        variant="outlined"
+        fullWidth
+        inputProps={{
+          id: `field-value-${props.index}`,
+        }}
+      >
+        <MenuItem value="true">True</MenuItem>
+        <MenuItem value="false">False</MenuItem>
+      </Field>
+    </FormControl>
+  }
+
+  if (props.type === 'date') {
+    return <Field
+      component={DatePicker}
+      name={`fields.${props.index}.value`}
+      label="Value"
+      inputVariant="outlined"
+      fullWidth
+    />
+  }
+
+  return <Field
+    component={TextField}
+    name={`fields.${props.index}.value`}
+    type={props.type}
+    label="Value"
+    variant="outlined"
+    fullWidth
+  />
+}
+
 function DocumentField(props: DocumentFieldComponentProps) {
   const classes = useStyles();
 
@@ -76,45 +125,31 @@ function DocumentField(props: DocumentFieldComponentProps) {
               />
             </Grid>
             <Grid item xs={12} sm={2}>
-              <Field
-                component={Select}
-                name={`fields.${index}.type`}
-                type="text"
-                label="Type"
-                variant="outlined"
-                fullWidth
-              >
-                <MenuItem value="string">String</MenuItem>
-                <MenuItem value="number">Number</MenuItem>
-                <MenuItem value="date">Date</MenuItem>
-                <MenuItem value="boolean">Boolean</MenuItem>
-              </Field>
-            </Grid>
-            <Grid item xs={12} sm={lastItem ? 3 : 4}>
-              {field.type === 'boolean' ?
+              <FormControl fullWidth>
+                <InputLabel htmlFor={`field-type-${index}`} variant="outlined">Type</InputLabel>
                 <Field
                   component={Select}
-                  name={`fields.${index}.value`}
+                  name={`fields.${index}.type`}
                   type="text"
-                  label="Value"
+                  label="Type"
                   variant="outlined"
                   fullWidth
+                  inputProps={{
+                    id: `field-type-${index}`,
+                  }}
                 >
-                  <MenuItem value="true">True</MenuItem>
-                  <MenuItem value="false">False</MenuItem>
-                </Field> :
-                <Field
-                  component={TextField}
-                  name={`fields.${index}.value`}
-                  type={field.type}
-                  label="Value"
-                  variant="outlined"
-                  fullWidth
-                />
-              }
+                  <MenuItem value="string">String</MenuItem>
+                  <MenuItem value="number">Number</MenuItem>
+                  <MenuItem value="date">Date</MenuItem>
+                  <MenuItem value="boolean">Boolean</MenuItem>
+                </Field>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={lastItem ? 3 : 4}>
+              <FieldValue type={field.type} index={index} />
             </Grid>
             {lastItem && <Grid item xs={12} sm={1}>
-              <IconButton onClick={() => props.arrayHelpers.push({ type: 'string', label: '', value: '', displayLabel: '' })}>
+              <IconButton onClick={() => props.arrayHelpers.push({ type: 'string', label: '', value: null, displayLabel: '' })}>
                 <AddIcon />
               </IconButton>
             </Grid>}

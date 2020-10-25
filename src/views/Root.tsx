@@ -1,7 +1,9 @@
 import React from 'react';
+import DateFnsUtils from '@date-io/date-fns';
 import blue from '@material-ui/core/colors/blue';
 import grey from '@material-ui/core/colors/grey';
 import orange from '@material-ui/core/colors/deepOrange';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { unstable_createMuiStrictModeTheme as createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import App from './App';
@@ -26,7 +28,9 @@ const theme = createMuiTheme({
 function Root() {
   return (
     <ThemeProvider theme={theme}>
-      <App />
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <App />
+      </MuiPickersUtilsProvider>
     </ThemeProvider>
   );
 }

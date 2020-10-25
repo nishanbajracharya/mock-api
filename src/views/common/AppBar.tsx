@@ -27,7 +27,8 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   avatar: {
-    border: '2px solid #fff'
+    border: '2px solid #fff',
+    background: theme.palette.secondary.light,
   },
   modal: {
     display: 'flex',
@@ -60,6 +61,14 @@ const useStyles = makeStyles(theme => ({
   },
   topMargin: {
     marginTop: theme.spacing(2),
+  },
+  guestBanner: {
+    fontWeight: 500,
+    textAlign: 'center',
+    padding: theme.spacing(2),
+    boxShadow: theme.shadows[2],
+    color: theme.palette.common.white,
+    background: theme.palette.primary.light,
   },
 }));
 
@@ -120,7 +129,7 @@ function AppBarComponent() {
               onClick={handleMenu}
               color="inherit"
             >
-              <Avatar alt={user?.displayName || 'User'} src={user?.photoURL || undefined} className={classes.avatar} />
+              <Avatar alt={user?.displayName || 'User'} src={user?.photoURL || undefined} className={classes.avatar}>{user?.displayName ? user.displayName[0] : 'M'}</Avatar>
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -144,6 +153,7 @@ function AppBarComponent() {
           </div>
         </Toolbar>
       </AppBar>
+      {guestUser && <div className={classes.guestBanner}>Guest user. View only mode enabled.</div>}
       <Modal
         isOpen={openModal}
         className={classes.modal}

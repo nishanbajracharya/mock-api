@@ -144,7 +144,7 @@ export function updateSchema(
     if (collection === col.collectionName) {
       return {
         ...col,
-        fields: fields.map((field) => ({ ...field, value: '' })),
+        fields: fields.map((field) => ({ ...field, value: null })),
       };
     }
 
