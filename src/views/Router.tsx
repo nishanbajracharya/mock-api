@@ -13,6 +13,7 @@ function AuthRoute({ children, ...rest }: RouteProps) {
   return (
     <Route
       {...rest}
+      // @ts-ignore
       render={({ location }) =>
         !user ? (
           children
@@ -35,6 +36,7 @@ function PrivateRoute({ children, ...rest }: RouteProps) {
   return (
     <Route
       {...rest}
+      // @ts-ignore
       render={({ location }) =>
         user ? (
           children
